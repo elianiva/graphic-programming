@@ -14,18 +14,19 @@
         name = "triangle";
         packages = with pkgs; [
           zig # used to compile c
+          dotnetCorePackages.sdk_7_0 # used to run the codegen for zig opengl binding
         ];
         buildInputs = with pkgs; [
           wayland # used to show the window on wayland
+          wayland-protocols
+          wayland-scanner
+          egl-wayland
+          libGL
+          libglvnd
         ];
         nativeBuildInputs = with pkgs; [
-          pkg-config # used to find wayland
-          wayland-scanner
+          pkg-config # used to find library paths
         ];
-        shellHook = ''
-          export LD_LIBRARY_PATH=${(pkgs.lib.makeLibraryPath [ pkgs.wayland ])}:$LD_LIBRARY_PATH
-          export LIBRARY_PATH=${(pkgs.lib.makeLibraryPath [ pkgs.wayland ])}:$LIBRARY_PATH
-        '';
       };
     };
 }
