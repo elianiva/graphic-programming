@@ -199,10 +199,12 @@ pub fn main() !void {
 
     {
         // this contains the position and the colour of the triangle
-        const vertices = [9]f32{
-            -0.5, -0.5, 0.0, // bottom left corner
-            0.0, 0.5, 0.0, // top middle
-            0.5, -0.5, 0.0, // bottom right corner
+        // zig fmt: off
+        const vertices = [_]f32{
+            // position      // colour
+            -0.5,-0.5, 0.0,  1.0, 0.0, 0.0, // bottom left corner
+             0.0, 0.5, 0.0,  0.0, 1.0, 0.0, // top middle
+             0.5,-0.5, 0.0,  0.0, 0.0, 1.0, // bottom right corner
         };
 
         // load vertex position data to the gpu using a buffer object
@@ -213,8 +215,12 @@ pub fn main() !void {
     }
 
     // see: https://learnopengl.com/Getting-started/Hello-Triangle
-    gl.vertexAttribPointer(0, 3, gl.FLOAT, gl.FALSE, 3 * @sizeOf(f32), @ptrFromInt(0));
+    // position attribute
+    gl.vertexAttribPointer(0, 3, gl.FLOAT, gl.FALSE, 6 * @sizeOf(f32), @ptrFromInt(0));
     gl.enableVertexAttribArray(0);
+    // colour attribute
+    gl.vertexAttribPointer(1, 3, gl.FLOAT, gl.FALSE, 6 * @sizeOf(f32), @ptrFromInt(3 * @sizeOf(f32)));
+    gl.enableVertexAttribArray(1);
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
