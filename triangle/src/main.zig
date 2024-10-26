@@ -54,6 +54,9 @@ pub fn main() !void {
     xdg_surface.setListener(*wl.Surface, xdgSurfaceListener, surface);
     xdg_toplevel.setListener(*bool, xdgToplevelListener, &running);
 
+    // listens for wm events (ping)
+    wm_base.setListener(*xdg.WmBase, wmBaseListener, wm_base);
+
     // commit the surface
     surface.commit();
     if (display.roundtrip() != .SUCCESS) return error.RoundtripFailed;
@@ -268,6 +271,14 @@ fn registryListener(registry: *wl.Registry, event: wl.Registry.Event, context: *
         },
         // don't care about other events
         else => {},
+    }
+}
+
+fn wmBaseListener(wm_base: *xdg.WmBase, event: xdg.WmBase.Event, _: *xdg.WmBase) void {
+    switch (event) {
+        .ping => |ping| {
+            wm_base.pong(ping.serial);
+        },
     }
 }
 
