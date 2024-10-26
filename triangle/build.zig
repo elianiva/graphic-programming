@@ -7,15 +7,17 @@ pub fn build(b: *std.Build) void {
     // add the C source file to the build
     const exe = b.addExecutable(.{
         .name = "triangle",
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = mode,
     });
+
+    // add c libraries
     exe.linkLibC();
-    exe.addCSourceFiles(.{
-        .files = &.{
-            "src/main.c",
-        },
-    });
+
+    // add wayland-client
+    exe.linkSystemLibrary("wayland-client");
+
     b.installArtifact(exe);
 
     const run_exe = b.addRunArtifact(exe);
